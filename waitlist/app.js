@@ -9,7 +9,7 @@
  * API_URL 留空時為「示範模式」：資料只存在這台瀏覽器的 localStorage，
  * 可以先測試畫面與流程，但不會跨裝置、也不會真的寄信。
  * ===================================================================== */
-const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnStQQ4_nghSOpXrZH93qVlrlgv7jI9DpmoWCqNLlrb5uDj-hoiAGGLxF7uH2qimZf6UTx9p-E0xXBUP6-OhF-8-w6n1QjOhfb3N5zZ6y1qTwI0fP4_pYTYs5HBJmR3qn7LPN7h_VthdRd7Yk4LSipv8jBwPPIIGA37sYsWLOzhj7KU-KzYnxSImNobQG3kBjDoJtA5tv6u7LHP_QjnW-wn5AnQ5dpnnRyMGPW4ShCzDpKO2fN3azMQi41mYQJSU_fay5_DQXAXKp9QQ8IWDQB1JrqotLA&lib=MImlDX0G6n5D4ejZCzQ7f3un1wonbKD5o";          // 例如 "https://script.google.com/macros/s/AKfycb.../exec"
+const API_URL = "https://script.google.com/macros/s/AKfycbyS1LVqKHYDSY2HOYnIHKpMCKAgOya0e9yvFIfl7SxZ0RB7SK-ujttOWKrEzMMLtUik/exec";          // 例如 "https://script.google.com/macros/s/AKfycb.../exec"
 const RESTAURANT = "海大餐廳";
 const DEMO_STAFF_KEY = "staff";   // 示範模式的員工密碼（正式模式的密碼寫在 Code.gs 的 STAFF_KEY）
 
