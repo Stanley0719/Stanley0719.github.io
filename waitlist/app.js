@@ -34,6 +34,7 @@ const Local = {
       case "count": return { waiting: active.length };
       case "status": { const r = find(); if (!r) return { error: "找不到這個候位號碼" }; return { ...r, ahead: ahead(r.id), waiting: active.length }; }
       case "join": {
+        if (active.length >= 500) return { error: "候位已滿，請稍後再試" };
         if (!p.name || !p.email || String(p.email).indexOf("@") < 0) return { error: "請填寫姓名與正確的 E-mail" };
         const id = rows.length ? Math.max(...rows.map(r => Number(r.id))) + 1 : 1;
         rows.push({ id, name: p.name, gender: p.gender || "其他", email: p.email, party_size: Number(p.party_size) || 1,
@@ -45,8 +46,24 @@ const Local = {
       case "queue": {
         if (!staff()) return { error: "unauthorized" };
         const today = this.now().slice(0, 10);
-        return { queue: active, seated: rows.filter(r => r.status === "seated" && String(r.closed_at).startsWith(today)).length,
-                 cancelled: rows.filter(r => r.status === "cancelled" && String(r.closed_at).startsWith(today)).length };
+        const joinedToday = rows.filter(r => String(r.created_at).startsWith(today));
+        const seatedToday = rows.filter(r => r.status === "seated" && String(r.closed_at).startsWith(today));
+        const cancelledToday = rows.filter(r => r.status === "cancelled" && String(r.created_at).startsWith(today));
+        const waitMinutes = seatedToday.map(r =>
+          (new Date(r.closed_at.replace(" ", "T")) - new Date(r.created_at.replace(" ", "T"))) / 60000
+        ).filter(value => Number.isFinite(value) && value >= 0);
+        const averageWait = waitMinutes.length
+          ? Math.round(waitMinutes.reduce((sum, value) => sum + value, 0) * 10 / waitMinutes.length) / 10
+          : 0;
+        return {
+          queue: active,
+          seated: seatedToday.length,
+          cancelled: rows.filter(r => r.status === "cancelled" && String(r.closed_at).startsWith(today)).length,
+          today_total: joinedToday.length,
+          average_wait_minutes: averageWait,
+          abandoned: cancelledToday.length,
+          abandonment_rate: joinedToday.length ? cancelledToday.length / joinedToday.length : 0
+        };
       }
       case "notify": {
         if (!staff()) return { error: "unauthorized" };
